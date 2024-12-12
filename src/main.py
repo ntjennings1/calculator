@@ -9,6 +9,9 @@ def main():
   calc = Calculator()
   calc.run()
 
-""" Runs the main function. """
+""" Runs the main function. 
+
+@return null
+"""
 if __name__ == '__main__':
   main()

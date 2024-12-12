@@ -1,11 +1,31 @@
+""" Native imports. """
 import tkinter as tk 
 
 class Viewer(tk.Frame):
-  """ Defines the initalize function. """
+  """
+  A class representation of a calculator.
+
+  ```
+  Attributes
+  ----------
+  view : The viewers view window
+
+  ```
+  Methods
+  -------
+  customize : Customizes the viewer
+  place : Places the viewer on the calculator
+  update : Updates the viewer
+  """
+
+  """ Initialize the class instance.
+  
+  @param master : Calculator application root
+  @type master : tk.Tk()
+  """
   def __init__(self, master):
     super().__init__(master)
     self.view = None
-    self.text = "" 
 
     self.customize()
     self.place()
@@ -26,23 +46,7 @@ class Viewer(tk.Frame):
   def set_view(self, view):
     self.view = view
 
-  """ Returns the views text content.
-
-  @return text : The viewers text content
-  @rtype text : str
-  """
-  def get_text(self):
-    return self.text
-
-  """ Sets the viewers text content.
-
-  @param text : The viewers text content
-  @type text : str
-  """
-  def set_text(self, text):
-    self.text = text
-
-  """ Updates the view.
+  """ Updates the view with new text.
 
   @param updates : The views updates
   @type updates : str
@@ -58,7 +62,7 @@ class Viewer(tk.Frame):
     self.set_view(tk.Label(self, text=self.get_text()))
     self.get_view().grid(row=0, column=0, padx=15, pady=15)
 
-  """ Places the viewer.
+  """ Places the viewer on the calculator.
 
   @return null
   """

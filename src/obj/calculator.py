@@ -1,5 +1,7 @@
+""" Native imports. """
 import tkinter as tk
 
+""" Class imports. """
 from obj.controller import Controller
 from obj.viewer import Viewer
 
@@ -13,6 +15,13 @@ class Calculator():
     root : The calculators tk application
     controller : The calculators controller
     viewer : The calulators viewer
+
+    ```
+    Methods
+    -------
+    customize : Customizes the calculator
+    fill : Fills the calculator with corresponding components
+    run : Starts the calculator application
   """
 
   """ Initialize class instance. """
@@ -21,7 +30,7 @@ class Calculator():
     self.controller = None
     self.viewer = None
 
-  """ Return root.
+  """ Returns the calculators root.
 
   @return root : The calculators app
   @rtype root : tk.Tk()
@@ -29,7 +38,7 @@ class Calculator():
   def get_root(self):
     return self.root
 
-  """ Set root. 
+  """ Sets the calculators root. 
 
   @param root : The calculators app
   @type root : tk.Tk()
@@ -69,21 +78,28 @@ class Calculator():
   def set_viewer(self, viewer):
     self.viewer = viewer
 
-  """ Fills the calculator.
+  """ Fills the calculators with its components.
 
   @return null
   """
   def fill(self):
-    #self.get_root().geometry('400x400')
     self.set_viewer(Viewer(self.get_root()))
     self.set_controller(Controller(self.get_root(), self))
 
-  """ Runs the calculator. 
+  """ Customizes the calculator.
+  
+  @return null
+  """
+  def customize():
+    #self.get_root().geometry('400x400')
+    pass
+
+  """ Starts the calculator application. 
 
   @return null
   """
   def run(self):
 
+    self.customize()
     self.fill()
-
     self.get_root().mainloop()

@@ -3,15 +3,44 @@ import tkinter as tk
 import ast
 
 class Controller(tk.Frame):
+  """
+  A class representation of a calculator controller.
 
-  """ Initialize the class instance. """
+  ```
+  Attributes
+  ----------
+  calc : The controllers calculator
+  num_buttons : The controllers number buttons
+  op_buttons : The controllers operation buttons
+  equation : The controllers input equation
+
+  ```
+  Methods
+  -------
+  customize : Customized the controller
+  place : Places the controller on the calculator
+  add_buttons : Adds all the controllers buttons
+  place_num_buttons : Places the number buttons on the controller
+  place_op_buttons : Places the operation buttons on the controller
+  clear : Clears the input equation
+  check : Checks the user input character for possible errors
+  equate : Solves the input equation
+  """
+
+  """ Initialize the class instance.
+
+  @param master : Calculator application root
+  @type master : tk.Tk()
+
+  @param calc : The calculator
+  @type calc : Object.class
+  """
   def __init__(self, master, calc):
     super().__init__(master)
     self.calc = calc
     self.num_buttons = []
     self.op_buttons = []
     self.equation = ""
-    self.solution = 0
 
     self.customize()
     self.place()
@@ -80,7 +109,7 @@ class Controller(tk.Frame):
   def set_equation(self, equation):
     self.equation = equation
 
-  """ Checks the input character against last character.
+  """ Checks the input character for possible errors.
 
   @param var : The input character
   @type var : str
@@ -121,7 +150,7 @@ class Controller(tk.Frame):
         else:
           self.press(var)
 
-  """ Press callback to add to controllers equation.
+  """ Callback to add to controllers equation.
 
   @param var : The input char
   @type var : str
@@ -130,7 +159,7 @@ class Controller(tk.Frame):
     self.set_equation(self.get_equation() + var)
     self.get_calc().get_viewer().update(self.get_equation())
 
-  """ Press callback to clear the controllers equation.
+  """ Clears the controllers equation.
 
   @return null
   """
@@ -138,7 +167,7 @@ class Controller(tk.Frame):
     self.set_equation("")
     self.get_calc().get_viewer().update(self.get_equation())
 
-  """ Press callback to find equation solution.
+  """ Solves the input equation.
 
   @return null
   """
@@ -151,7 +180,8 @@ class Controller(tk.Frame):
     except Exception as ex: 
       self.clear()
       self.get_calc().get_viewer().update('Err')
-  """ Place controller operation buttons.
+  
+  """ Places controller operation buttons in grid.
 
   @return null
   """
@@ -165,7 +195,7 @@ class Controller(tk.Frame):
       b.grid(row=row, column=col)
       row += 1
 
-  """ Place controller number buttons.
+  """ Places controller number buttons in grid.
 
   @return null
   """
@@ -180,7 +210,7 @@ class Controller(tk.Frame):
       b.grid(row=row, column=col+3)
       col += 1
 
-  """ Adds the controllers buttons.
+  """ Adds buttons to the controller.
 
   @return null
   """
@@ -196,26 +226,18 @@ class Controller(tk.Frame):
     button8 = tk.Button(self, text="8", command=lambda: self.press('8'), width='5')
     button9 = tk.Button(self, text="9", command=lambda: self.press('9'), width='5')
 
-    minus_button = tk.Button(self, text="-", command=lambda: 
-self.check('-'), width='5')
-    plus_button = tk.Button(self, text="+", command=lambda: 
-self.check('+'), width='5')
-    mult_button = tk.Button(self, text="*", command=lambda: 
-self.check('*'), width='5')
-    div_button = tk.Button(self, text="/", command=lambda: 
-self.check('/'), width='5')
-    lpar_button = tk.Button(self, text="(", command=lambda: 
-self.press('('), width='5')
-    rpar_button = tk.Button(self, text=")", command=lambda: 
-self.press(')'), width='5')
-    exp_button = tk.Button(self, text="^", command=lambda: 
-self.check('**'), width='5')
+    minus_button = tk.Button(self, text="-", command=lambda: self.check('-'), width='5')
+    plus_button = tk.Button(self, text="+", command=lambda: self.check('+'), width='5')
+    mult_button = tk.Button(self, text="*", command=lambda: self.check('*'), width='5')
+    div_button = tk.Button(self, text="/", command=lambda: self.check('/'), width='5')
+    lpar_button = tk.Button(self, text="(", command=lambda: self.press('('), width='5')
+    rpar_button = tk.Button(self, text=")", command=lambda: self.press(')'), width='5')
+    exp_button = tk.Button(self, text="^", command=lambda: self.check('**'), width='5')
 
     clear_button = tk.Button(self, text="C", command=self.clear, width='5')
     equate_button = tk.Button(self, text="=", command=self.equate, width='5')
     blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5')
-    deci_button = tk.Button(self, text=".", command=lambda: 
-self.check('.'), width='5')
+    deci_button = tk.Button(self, text=".", command=lambda: self.check('.'), width='5')
 
     self.get_num_buttons().append(button9)
     self.get_num_buttons().append(button8)
@@ -250,7 +272,7 @@ self.check('.'), width='5')
   def customize(self):
     self.add_buttons()
 
-  """ Places the controller 
+  """ Places the controller on the calculator.
 
   @return null
   """
