@@ -23,6 +23,9 @@ class Controller(tk.Frame):
   place_num_buttons : Places the number buttons on the controller
   place_op_buttons : Places the operation buttons on the controller
   clear : Clears the input equation
+  delete : Deleted the last character in the equation
+  swap : Swaps the polarity of the last variable in the equation 
+  search : Searches for the last variable in the input equation
   check : Checks the user input character for possible errors
   equate : Solves the input equation
   """
