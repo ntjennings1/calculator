@@ -59,7 +59,7 @@ class Viewer(tk.Frame):
   @return null
   """
   def customize(self):
-    self.set_view(tk.Label(self, text=self.get_text()))
+    self.set_view(tk.Label(self, text=''))
     self.get_view().grid(row=0, column=0, padx=15, pady=15)
 
   """ Places the viewer on the calculator.

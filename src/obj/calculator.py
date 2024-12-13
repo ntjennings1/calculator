@@ -90,7 +90,7 @@ class Calculator():
   
   @return null
   """
-  def customize():
+  def customize(self):
     #self.get_root().geometry('400x400')
     pass
 

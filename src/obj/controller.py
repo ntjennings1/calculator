@@ -115,40 +115,32 @@ class Controller(tk.Frame):
   @type var : str
   """
   def check(self, var):
+
     ops = ['+', '-', '/', '*', '**', '.'] 
+    par = ['(', ')']
+    last = None 
+
     if len(self.get_equation()) == 0:
       pass
     else:
-      if var == '+':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
+      last= str(self.get_equation()[len(self.get_equation()) - 1])
+      if var in ops:
+        if str(var) == last:
+          pass
+        elif last in ops:
           pass
         else:
-          self.press(var)
-      elif var == '-':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
-          pass
-        else:
-          self.press(var)
-      elif var == '*':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
-          pass
-        else:
-          self.press(var)
-      elif var == '/':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
-          pass
-        else:
-          self.press(var)
-      elif var == '.':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
-          pass
-        else:
-          self.press(var)
-      elif var == '**':
-        if str(var) == self.get_equation()[len(self.get_equation()) - 1]:
-          pass
-        else:
-          self.press(var)
+          self.press(str(var))
+      elif var in par:
+        if str(var) == '(':
+          if last not in ops:
+            self.press('*' + str(var))
+          else:
+            self.press(str(var))
+        elif str(var) == ')':
+          if last not in ops:
+            self.press(str(var))
+
 
   """ Callback to add to controllers equation.
 
@@ -167,20 +159,48 @@ class Controller(tk.Frame):
     self.set_equation("")
     self.get_calc().get_viewer().update(self.get_equation())
 
+  """ Finds the last variable.
+  
+  @return null
+  """
+  def search(self):
+    pass
+
+  """ Swaps the polarity of the last variable.
+
+  @return null
+  """
+  def swap(self):
+    pass
+
+  """ Delete the last character in the equation.
+  
+  @return null
+  """
+  def delete(self):
+    if len(self.get_equation()) > 0:
+      self.set_equation(self.get_equation()[:-1])
+      self.get_calc().get_viewer().update(self.get_equation())
+    else:
+      pass
+
   """ Solves the input equation.
 
   @return null
   """
   def equate(self):
-    try:
-      eq = ast.parse(self.get_equation(), mode='eval')
-      sol = eval(compile(eq, '<string>', 'eval'))
-      self.get_calc().get_viewer().update(sol)
-      self.set_equation(str(sol))
-    except Exception as ex: 
-      self.clear()
-      self.get_calc().get_viewer().update('Err')
-  
+    if len(self.get_equation()) > 0:
+      try:
+        eq = ast.parse(self.get_equation(), mode='eval')
+        sol = eval(compile(eq, '<string>', 'eval'))
+        self.get_calc().get_viewer().update(sol)
+        self.set_equation(str(sol))
+      except Exception as ex: 
+        self.clear()
+        self.get_calc().get_viewer().update('Err')
+    else:
+      pass
+    
   """ Places controller operation buttons in grid.
 
   @return null
@@ -189,7 +209,7 @@ class Controller(tk.Frame):
     row = 0
     col = 0
     for b in self.get_op_buttons():
-      if row % 4 == 0:
+      if row % 5 == 0:
         row = 0 
         col += 1
       b.grid(row=row, column=col)
@@ -230,37 +250,43 @@ class Controller(tk.Frame):
     plus_button = tk.Button(self, text="+", command=lambda: self.check('+'), width='5')
     mult_button = tk.Button(self, text="*", command=lambda: self.check('*'), width='5')
     div_button = tk.Button(self, text="/", command=lambda: self.check('/'), width='5')
-    lpar_button = tk.Button(self, text="(", command=lambda: self.press('('), width='5')
-    rpar_button = tk.Button(self, text=")", command=lambda: self.press(')'), width='5')
+    lpar_button = tk.Button(self, text="(", command=lambda: self.check('('), width='5')
+    rpar_button = tk.Button(self, text=")", command=lambda: self.check(')'), width='5')
     exp_button = tk.Button(self, text="^", command=lambda: self.check('**'), width='5')
 
+    deci_button = tk.Button(self, text=".", command=lambda: self.check('.'), width='5')
+    blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5')
     clear_button = tk.Button(self, text="C", command=self.clear, width='5')
     equate_button = tk.Button(self, text="=", command=self.equate, width='5')
-    blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5')
-    deci_button = tk.Button(self, text=".", command=lambda: self.check('.'), width='5')
+    delete_button = tk.Button(self, text='<x', command=self.delete, width='5')
+    swap_button = tk.Button(self, text="+/-", command=self.swap, width='5')
 
-    self.get_num_buttons().append(button9)
-    self.get_num_buttons().append(button8)
     self.get_num_buttons().append(button7)
-    self.get_num_buttons().append(button6)
-    self.get_num_buttons().append(button5)
+    self.get_num_buttons().append(button8)
+    self.get_num_buttons().append(button9)
     self.get_num_buttons().append(button4)
-    self.get_num_buttons().append(button3)
-    self.get_num_buttons().append(button2)
+    self.get_num_buttons().append(button5)
+    self.get_num_buttons().append(button6)
     self.get_num_buttons().append(button1)
-    self.get_num_buttons().append(equate_button)
+    self.get_num_buttons().append(button2)
+    self.get_num_buttons().append(button3)
+    self.get_num_buttons().append(blank_button)
     self.get_num_buttons().append(button0)
     self.get_num_buttons().append(deci_button)
+    self.get_num_buttons().append(equate_button)
 
 
     self.get_op_buttons().append(minus_button)
-    self.get_op_buttons().append(plus_button)
     self.get_op_buttons().append(mult_button)
-    self.get_op_buttons().append(div_button)
-    self.get_op_buttons().append(lpar_button)
-    self.get_op_buttons().append(rpar_button)
     self.get_op_buttons().append(exp_button)
+    self.get_op_buttons().append(lpar_button)
+    self.get_op_buttons().append(swap_button)
+
+    self.get_op_buttons().append(plus_button)
+    self.get_op_buttons().append(div_button)
+    self.get_op_buttons().append(rpar_button)
     self.get_op_buttons().append(clear_button)
+    self.get_op_buttons().append(delete_button)
 
     self.place_num_buttons()
     self.place_op_buttons()
