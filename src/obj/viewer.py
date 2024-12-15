@@ -28,7 +28,6 @@ class Viewer(tk.Frame):
     self.view = None
 
     self.customize()
-    self.place()
 
   """ Returns the viewers view.
 
@@ -60,12 +59,12 @@ class Viewer(tk.Frame):
   """
   def customize(self):
     self.set_view(tk.Label(self, text=''))
-    self.get_view().grid(row=0, column=0, padx=15, pady=15)
+    self.get_view().grid(row=0, column=0, padx=15)
 
   """ Places the viewer on the calculator.
 
   @return null
   """
-  def place(self):
-    self.grid(row=0, column=0)
+  def place(self, row, col):
+    self.grid(row=row, column=col)
 

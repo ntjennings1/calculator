@@ -52,7 +52,6 @@ class Controller(tk.Frame):
 
     self.connect()
     self.customize()
-    self.place()
 
   """ Returns the controllers calculator.
 
@@ -175,7 +174,7 @@ class Controller(tk.Frame):
   """
   def press(self, var):
     self.set_equation(self.get_equation() + var)
-    self.get_calc().get_viewer().update(self.get_equation())
+    self.get_calc().get_nviewer().update(self.get_equation())
 
   """ Clears the controllers equation.
 
@@ -183,7 +182,7 @@ class Controller(tk.Frame):
   """
   def clear(self):
     self.set_equation("")
-    self.get_calc().get_viewer().update(self.get_equation())
+    self.get_calc().get_nviewer().update(self.get_equation())
 
   def close(self):
     try:
@@ -216,7 +215,7 @@ class Controller(tk.Frame):
   def delete(self):
     if len(self.get_equation()) > 0:
       self.set_equation(self.get_equation()[:-1])
-      self.get_calc().get_viewer().update(self.get_equation())
+      self.get_calc().get_nviewer().update(self.get_equation())
     else:
       pass
 
@@ -239,7 +238,7 @@ class Controller(tk.Frame):
         self.get_db().commit()
 
         sol = eval(compile(eq, '<string>', 'eval'))
-        self.get_calc().get_viewer().update(sol)
+        self.get_calc().get_nviewer().update(sol)
         self.set_equation(str(sol))
 
         self.querry()
@@ -247,7 +246,7 @@ class Controller(tk.Frame):
       except Exception as ex:
         print(ex)
         self.clear()
-        self.get_calc().get_viewer().update('Err')
+        self.get_calc().get_nviewer().update('Err')
     else:
       pass
     
@@ -285,33 +284,34 @@ class Controller(tk.Frame):
   @return null
   """
   def add_buttons(self):
-    button0 = tk.Button(self, text="0", command=lambda: self.press('0'), width='5')
-    button1 = tk.Button(self, text="1", command=lambda: self.press('1'), width='5')
-    button2 = tk.Button(self, text="2", command=lambda: self.press('2'), width='5')
-    button3 = tk.Button(self, text="3", command=lambda: self.press('3'), width='5')
-    button4 = tk.Button(self, text="4", command=lambda: self.press('4'), width='5')
-    button5 = tk.Button(self, text="5", command=lambda: self.press('5'), width='5')
-    button6 = tk.Button(self, text="6", command=lambda: self.press('6'), width='5')
-    button7 = tk.Button(self, text="7", command=lambda: self.press('7'), width='5')
-    button8 = tk.Button(self, text="8", command=lambda: self.press('8'), width='5')
-    button9 = tk.Button(self, text="9", command=lambda: self.press('9'), width='5')
+    font = ('Arial', 14)
+    button0 = tk.Button(self, text="0", command=lambda: self.press('0'), width='5', bg='orange', font=font)
+    button1 = tk.Button(self, text="1", command=lambda: self.press('1'), width='5', bg='orange', font=font)
+    button2 = tk.Button(self, text="2", command=lambda: self.press('2'), width='5', bg='orange', font=font)
+    button3 = tk.Button(self, text="3", command=lambda: self.press('3'), width='5', bg='orange', font=font)
+    button4 = tk.Button(self, text="4", command=lambda: self.press('4'), width='5', bg='orange', font=font)
+    button5 = tk.Button(self, text="5", command=lambda: self.press('5'), width='5', bg='orange', font=font)
+    button6 = tk.Button(self, text="6", command=lambda: self.press('6'), width='5', bg='orange', font=font)
+    button7 = tk.Button(self, text="7", command=lambda: self.press('7'), width='5', bg='orange', font=font)
+    button8 = tk.Button(self, text="8", command=lambda: self.press('8'), width='5', bg='orange', font=font)
+    button9 = tk.Button(self, text="9", command=lambda: self.press('9'), width='5', bg='orange', font=font)
 
-    minus_button = tk.Button(self, text="-", command=lambda: self.check('-'), width='5')
-    plus_button = tk.Button(self, text="+", command=lambda: self.check('+'), width='5')
-    mult_button = tk.Button(self, text="*", command=lambda: self.check('*'), width='5')
-    div_button = tk.Button(self, text="/", command=lambda: self.check('/'), width='5')
-    lpar_button = tk.Button(self, text="(", command=lambda: self.check('('), width='5')
-    rpar_button = tk.Button(self, text=")", command=lambda: self.check(')'), width='5')
-    exp_button = tk.Button(self, text="^", command=lambda: self.check('**'), width='5')
+    minus_button = tk.Button(self, text="-", command=lambda: self.check('-'), width='5', font=font)
+    plus_button = tk.Button(self, text="+", command=lambda: self.check('+'), width='5', font=font)
+    mult_button = tk.Button(self, text="*", command=lambda: self.check('*'), width='5', font=font)
+    div_button = tk.Button(self, text="/", command=lambda: self.check('/'), width='5', font=font)
+    lpar_button = tk.Button(self, text="(", command=lambda: self.check('('), width='5', font=font)
+    rpar_button = tk.Button(self, text=")", command=lambda: self.check(')'), width='5', font=font)
+    exp_button = tk.Button(self, text="^", command=lambda: self.check('**'), width='5', font=font)
 
-    deci_button = tk.Button(self, text=".", command=lambda: self.check('.'), width='5')
-    blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5')
-    clear_button = tk.Button(self, text="C", command=self.clear, width='5')
-    equate_button = tk.Button(self, text="=", command=self.equate, width='5')
-    delete_button = tk.Button(self, text='<', command=self.delete, width='5')
-    exit_button = tk.Button(self, text="EXIT", command=self.close, width='5')
-    up_button = tk.Button(self, text="\u2191", command=self.up, width='5')
-    down_button = tk.Button(self, text=" \u2193", command=self.down, width='5')
+    deci_button = tk.Button(self, text=".", command=lambda: self.check('.'), width='5', bg='orange', font=font)
+    blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5', bg='orange', font=font)
+    clear_button = tk.Button(self, text="C", command=self.clear, width='5', font=font)
+    equate_button = tk.Button(self, text="=", command=self.equate, width='5', font=font)
+    delete_button = tk.Button(self, text='<', command=self.delete, width='5', font=font)
+    exit_button = tk.Button(self, text="EXIT", command=self.close, width='5', font=font)
+    up_button = tk.Button(self, text="\u2191", command=self.up, width='5', font=font)
+    down_button = tk.Button(self, text=" \u2193", command=self.down, width='5', font=font)
 
     self.get_num_buttons().append(button7)
     self.get_num_buttons().append(button8)
@@ -356,8 +356,8 @@ class Controller(tk.Frame):
 
   @return null
   """
-  def place(self):
-    self.grid(row=1, column=0)
+  def place(self, row, col):
+    self.grid(row=row, column=col)
 
   def querry(self):
     cursor = self.get_db().cursor()
@@ -368,6 +368,7 @@ class Controller(tk.Frame):
         rows.append(i[0])
 
     self.set_previous_equations(rows)
+    self.get_calc().get_pviewer().update(self.get_previous_equations()[-1])
     cursor.close()
 
   def connect(self):

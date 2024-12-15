@@ -28,7 +28,8 @@ class Calculator():
   def __init__(self): 
     self.root = tk.Tk()
     self.controller = None
-    self.viewer = None
+    self.nviewer = None
+    self.pviewer = None
 
   """ Returns the calculators root.
 
@@ -67,7 +68,7 @@ class Calculator():
   @return viewer : The calculators viewer
   @rtype viewer : tk.Frame
   """
-  def get_viewer(self):
+  def get_nviewer(self):
     return self.viewer
 
   """ Sets the calculators viewer.
@@ -75,15 +76,32 @@ class Calculator():
   @param viewer : The calculators viewer
   @type viewer : tk.Frame
   """
-  def set_viewer(self, viewer):
+  def set_nviewer(self, viewer):
     self.viewer = viewer
+
+  """ Returns the calculators viewer.
+
+  @return viewer : The calculators viewer
+  @rtype viewer : tk.Frame
+  """
+  def get_pviewer(self):
+    return self.pviewer
+
+  """ Sets the calculators viewer.
+
+  @param viewer : The calculators viewer
+  @type viewer : tk.Frame
+  """
+  def set_pviewer(self, pviewer):
+    self.pviewer = pviewer
 
   """ Fills the calculators with its components.
 
   @return null
   """
   def fill(self):
-    self.set_viewer(Viewer(self.get_root()))
+    self.set_nviewer(Viewer(self.get_root()))
+    self.set_pviewer(Viewer(self.get_root()))
     self.set_controller(Controller(self.get_root(), self))
 
   """ Customizes the calculator.
@@ -91,7 +109,15 @@ class Calculator():
   @return null
   """
   def customize(self):
-    #self.get_root().geometry('400x400')
+
+    self.get_pviewer().place(0,0)
+    self.get_pviewer().get_view().configure(width=50, anchor='e', font=('Arial', 7))
+    
+    self.get_nviewer().place(1,0)
+    self.get_nviewer().get_view().configure(width=30, anchor='e', font=('Arial', 15))
+    
+    self.get_controller().place(2,0)
+
     pass
 
   """ Starts the calculator application. 
@@ -100,6 +126,6 @@ class Calculator():
   """
   def run(self):
 
-    self.customize()
     self.fill()
+    self.customize()
     self.get_root().mainloop()
