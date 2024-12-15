@@ -1,6 +1,8 @@
 """ Native imports. """
+import os
 import tkinter as tk
 import ast
+import sqlite3
 
 class Controller(tk.Frame):
   """
@@ -44,7 +46,11 @@ class Controller(tk.Frame):
     self.num_buttons = []
     self.op_buttons = []
     self.equation = ""
+    self.previous_equations = None
+    self.db = None
+    self.db_path=''
 
+    self.connect()
     self.customize()
     self.place()
 
@@ -112,6 +118,24 @@ class Controller(tk.Frame):
   def set_equation(self, equation):
     self.equation = equation
 
+  def get_previous_equations(self):
+    return self.previous_equations
+  
+  def set_previous_equations(self, previous_equations):
+    self.previous_equations = previous_equations
+
+  def get_db(self):
+    return self.db
+  
+  def set_db(self, db):
+    self.db = db
+
+  def get_db_path(self):
+    return self.db_path
+  
+  def set_db_path(self, db):
+    self.db_path = db
+
   """ Checks the input character for possible errors.
 
   @param var : The input character
@@ -144,7 +168,6 @@ class Controller(tk.Frame):
           if last not in ops:
             self.press(str(var))
 
-
   """ Callback to add to controllers equation.
 
   @param var : The input char
@@ -161,6 +184,16 @@ class Controller(tk.Frame):
   def clear(self):
     self.set_equation("")
     self.get_calc().get_viewer().update(self.get_equation())
+
+  def close(self):
+    try:
+      self.get_calc().get_root().quit()
+      self.get_calc().get_root().destroy()
+      self.get_db().commit()
+      self.get_db().close()
+      exit()
+    except Exception as ex:
+      print('Error closing calculator.')
 
   """ Finds the last variable.
   
@@ -187,6 +220,12 @@ class Controller(tk.Frame):
     else:
       pass
 
+  def up(self):
+    pass
+
+  def down(self):
+    pass
+
   """ Solves the input equation.
 
   @return null
@@ -195,10 +234,18 @@ class Controller(tk.Frame):
     if len(self.get_equation()) > 0:
       try:
         eq = ast.parse(self.get_equation(), mode='eval')
+
+        self.get_db().cursor().execute("INSERT INTO previous_table (content) VALUES (?)", (self.get_equation(),) )
+        self.get_db().commit()
+
         sol = eval(compile(eq, '<string>', 'eval'))
         self.get_calc().get_viewer().update(sol)
         self.set_equation(str(sol))
-      except Exception as ex: 
+
+        self.querry()
+
+      except Exception as ex:
+        print(ex)
         self.clear()
         self.get_calc().get_viewer().update('Err')
     else:
@@ -261,8 +308,10 @@ class Controller(tk.Frame):
     blank_button = tk.Button(self, text=" ", state=tk.DISABLED, width='5')
     clear_button = tk.Button(self, text="C", command=self.clear, width='5')
     equate_button = tk.Button(self, text="=", command=self.equate, width='5')
-    delete_button = tk.Button(self, text='<x', command=self.delete, width='5')
-    swap_button = tk.Button(self, text="+/-", command=self.swap, width='5')
+    delete_button = tk.Button(self, text='<', command=self.delete, width='5')
+    exit_button = tk.Button(self, text="EXIT", command=self.close, width='5')
+    up_button = tk.Button(self, text="\u2191", command=self.up, width='5')
+    down_button = tk.Button(self, text=" \u2193", command=self.down, width='5')
 
     self.get_num_buttons().append(button7)
     self.get_num_buttons().append(button8)
@@ -277,13 +326,15 @@ class Controller(tk.Frame):
     self.get_num_buttons().append(button0)
     self.get_num_buttons().append(deci_button)
     self.get_num_buttons().append(equate_button)
+    self.get_num_buttons().append(up_button)
+    self.get_num_buttons().append(down_button)
 
 
     self.get_op_buttons().append(minus_button)
     self.get_op_buttons().append(mult_button)
     self.get_op_buttons().append(exp_button)
     self.get_op_buttons().append(lpar_button)
-    self.get_op_buttons().append(swap_button)
+    self.get_op_buttons().append(exit_button)
 
     self.get_op_buttons().append(plus_button)
     self.get_op_buttons().append(div_button)
@@ -307,3 +358,31 @@ class Controller(tk.Frame):
   """
   def place(self):
     self.grid(row=1, column=0)
+
+  def querry(self):
+    cursor = self.get_db().cursor()
+    cursor.execute("SELECT * FROM previous_table")
+    
+    rows=[]
+    for i in cursor.fetchall():
+        rows.append(i[0])
+
+    self.set_previous_equations(rows)
+    cursor.close()
+
+  def connect(self):
+    
+    try:
+      root_dir = os.path.dirname(os.path.abspath(__file__))
+      self.set_db_path(os.path.join(root_dir, r'../data/data.db'))
+      create_command = """
+        CREATE TABLE previous_table (
+          content TEXT NOT_NULL
+        )
+      """
+      self.set_db(sqlite3.connect(self.get_db_path()))
+      self.get_db().execute('DROP TABLE IF EXISTS previous_table')
+      self.get_db().execute(create_command)
+    except Exception as ex:
+      print('Error connecting to database')
+      self.close()
