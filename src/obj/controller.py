@@ -1,5 +1,6 @@
 """ Native imports. """
 import os
+import time
 import tkinter as tk
 import ast
 import sqlite3
@@ -47,6 +48,8 @@ class Controller(tk.Frame):
     self.op_buttons = []
     self.equation = ""
     self.previous_equations = None
+    self.index = 0
+    self.travelling = False
     self.db = None
     self.db_path=''
 
@@ -123,6 +126,18 @@ class Controller(tk.Frame):
   def set_previous_equations(self, previous_equations):
     self.previous_equations = previous_equations
 
+  def get_index(self):
+    return self.index
+  
+  def set_index(self, index):
+    self.index = index
+
+  def get_travelling(self):
+    return self.travelling
+  
+  def set_travelling(self, travelling):
+    self.travelling = travelling
+
   def get_db(self):
     return self.db
   
@@ -181,8 +196,10 @@ class Controller(tk.Frame):
   @return null
   """
   def clear(self):
+    self.set_travelling(False)
     self.set_equation("")
     self.get_calc().get_nviewer().update(self.get_equation())
+    self.get_calc().get_pviewer().update(self.get_previous_equations()[len(self.get_previous_equations())-1])
 
   def close(self):
     try:
@@ -220,10 +237,39 @@ class Controller(tk.Frame):
       pass
 
   def up(self):
-    pass
+    
+    if len(self.get_previous_equations()) > 0:
+
+      if not self.get_travelling():
+        self.set_index(len(self.get_previous_equations())-1)
+        self.set_equation(self.get_previous_equations()[self.get_index()])
+        self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()])
+        if len(self.get_previous_equations()) == 1:
+          self.get_calc().get_pviewer().update('')
+        else:
+          self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])
+        self.set_travelling(True)
+
+      elif self.get_travelling():
+        if self.get_index() > 0:
+          self.set_index(self.get_index()-1)
+          self.set_equation(self.get_previous_equations()[self.get_index()])
+          self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()]) 
+          if self.get_index()-1 >= 0:
+            self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])   
+          else:
+            self.get_calc().get_pviewer().update('') 
 
   def down(self):
-    pass
+    
+    if self.get_index() <= len(self.get_previous_equations())-1:
+      
+      if self.get_travelling():
+        if self.get_index()+1 < len(self.get_previous_equations()):
+          self.set_index(self.get_index()+1)
+          self.set_equation(self.get_previous_equations()[self.get_index()])
+          self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()])
+          self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])
 
   """ Solves the input equation.
 
@@ -241,7 +287,9 @@ class Controller(tk.Frame):
         self.get_calc().get_nviewer().update(sol)
         self.set_equation(str(sol))
 
+        self.set_travelling(False)
         self.querry()
+        time.sleep(0)
 
       except Exception as ex:
         print(ex)
