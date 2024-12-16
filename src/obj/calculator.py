@@ -14,8 +14,9 @@ class Calculator():
     ----------
     root : The calculators tk application
     controller : The calculators controller
-    viewer : The calulators viewer
-
+    nviewer : The calulators new viewer
+    pviewer : The calculators previous viewer
+    
     ```
     Methods
     -------
@@ -117,8 +118,6 @@ class Calculator():
     self.get_nviewer().get_view().configure(width=30, anchor='e', font=('Arial', 15))
     
     self.get_controller().place(2,0)
-
-    pass
 
   """ Starts the calculator application. 
 

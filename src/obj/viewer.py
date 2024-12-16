@@ -63,7 +63,11 @@ class Viewer(tk.Frame):
 
   """ Places the viewer on the calculator.
 
-  @return null
+  @param row : The viewers row
+  @type row : int
+
+  @param col : The viewers column
+  @type col : int
   """
   def place(self, row, col):
     self.grid(row=row, column=col)

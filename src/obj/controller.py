@@ -13,15 +13,22 @@ class Controller(tk.Frame):
   Attributes
   ----------
   calc : The controllers calculator
+  db : The controllers database
+  db_path : The path to the controllers database
   num_buttons : The controllers number buttons
   op_buttons : The controllers operation buttons
   equation : The controllers input equation
+  previous_equations : The controllers previous input equations
+  index : The controllers scroll index
+  travelling : The controllers travelling status
 
   ```
   Methods
   -------
+  close : Closes the application
   customize : Customized the controller
   place : Places the controller on the calculator
+  connect : Connect to database and creates a data table
   add_buttons : Adds all the controllers buttons
   place_num_buttons : Places the number buttons on the controller
   place_op_buttons : Places the operation buttons on the controller
@@ -31,6 +38,9 @@ class Controller(tk.Frame):
   search : Searches for the last variable in the input equation
   check : Checks the user input character for possible errors
   equate : Solves the input equation
+  up : Scrolls upward through previous equations
+  down : Scrolls downward through previous equations
+  querry : Querries through database table for previous entries
   """
 
   """ Initialize the class instance.
@@ -120,35 +130,85 @@ class Controller(tk.Frame):
   def set_equation(self, equation):
     self.equation = equation
 
+  """ Returns the controllers previous equations.
+  
+  @return previous_equation : The controllers previous equations
+  @rtype previous_equation : list
+  """
   def get_previous_equations(self):
     return self.previous_equations
   
+  """ Sets the controllers previous equations
+  
+  @param previous_equation : The controllers previous equations
+  @type previous_equations : list
+  """
   def set_previous_equations(self, previous_equations):
     self.previous_equations = previous_equations
 
+  """ Returns the controllers current index.
+  
+  @return index : The controllers current index
+  @rtype index : int
+  """
   def get_index(self):
     return self.index
   
+  """ Sets the controllers current index.
+  
+  @param index : The controllers current index
+  @type index : int
+  """
   def set_index(self, index):
     self.index = index
 
+  """ Returns the controllers travelling status.
+  
+  @return travelling : The controllers travelling status
+  @rtype travelling : boolean
+  """
   def get_travelling(self):
     return self.travelling
   
+  """ Sets the controllers travelling status.
+  
+  @param travelling : The controllers travelling status
+  @type travelling : boolean
+  """
   def set_travelling(self, travelling):
     self.travelling = travelling
 
+  """ Returns the controllers database.
+  
+  @return db : The controllers database
+  @rtype db : sqlite3.connect
+  """
   def get_db(self):
     return self.db
   
+  """ Sets the controllers database.
+  
+  @param db : The controllers database
+  @type db : sqlite3.connect
+  """
   def set_db(self, db):
     self.db = db
 
+  """ Returns the controllers database path.
+  
+  @return db : The controllers database path
+  @rtype db : str
+  """
   def get_db_path(self):
     return self.db_path
   
-  def set_db_path(self, db):
-    self.db_path = db
+  """ Sets the controllers database path.
+  
+  @param db_path : The controllers database path
+  @type db_path : str
+  """
+  def set_db_path(self, db_path):
+    self.db_path = db_path
 
   """ Checks the input character for possible errors.
 
@@ -201,6 +261,10 @@ class Controller(tk.Frame):
     self.get_calc().get_nviewer().update(self.get_equation())
     self.get_calc().get_pviewer().update(self.get_previous_equations()[len(self.get_previous_equations())-1])
 
+  """ Closes the application.
+  
+  @return null
+  """
   def close(self):
     try:
       self.get_calc().get_root().quit()
@@ -236,6 +300,10 @@ class Controller(tk.Frame):
     else:
       pass
 
+  """ Scrolls upward in previous equations. 
+  
+  @return null
+  """
   def up(self):
     
     if len(self.get_previous_equations()) > 0:
@@ -260,6 +328,10 @@ class Controller(tk.Frame):
           else:
             self.get_calc().get_pviewer().update('') 
 
+  """ Scrolls downward in previous equations.
+  
+  @return null
+  """
   def down(self):
     
     if self.get_index() <= len(self.get_previous_equations())-1:
@@ -407,6 +479,10 @@ class Controller(tk.Frame):
   def place(self, row, col):
     self.grid(row=row, column=col)
 
+  """ Querries the controllers database for previous equations.
+  
+  @return null
+  """
   def querry(self):
     cursor = self.get_db().cursor()
     cursor.execute("SELECT * FROM previous_table")
@@ -419,6 +495,10 @@ class Controller(tk.Frame):
     self.get_calc().get_pviewer().update(self.get_previous_equations()[-1])
     cursor.close()
 
+  """ Connects to database and creates table.
+  
+  @return null
+  """
   def connect(self):
     
     try:

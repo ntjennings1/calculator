@@ -2,6 +2,10 @@
 
 A simple calculator gui written in Python.
 
+## About
+
+This application uses many modules native to Python such TKinter, SQLite3, OS, etc. These packages were leveraged to develop a free, easy to use calculator that is capable of many arithmetic operations. Upon opening the Tkinter GUI window, users can invoke operations that will be saved to an internal SQL database for later reference. 
+
 ## Software Requirements 
 
 ```
@@ -14,17 +18,16 @@ Instructions on how to use the custom calculator are included below.
 
 ### Terminal Usage
 
-Open the command prompt and enter the src directory of the project. Usage depends on environment.
+Open the command prompt and enter your chosen home directory of the project.
 
 ```
-	cd $CALC_HOME/src
+	cd $CALC_HOME
 ```
 
 Invoke the main python script containing the calculator.
 
 ```
-	python main.py
-	python3 main.py
+	python src/main.py
 ```
 
 ## Acknowledgements
