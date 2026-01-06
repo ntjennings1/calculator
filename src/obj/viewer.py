@@ -2,73 +2,76 @@
 import tkinter as tk 
 
 class Viewer(tk.Frame):
-  """
-  A class representation of a calculator.
+	"""
+	A class representation of a calculator.
 
-  ```
-  Attributes
-  ----------
-  view : The viewers view window
+	```
+	Attributes
+	----------
+	view : The viewers view window
 
-  ```
-  Methods
-  -------
-  customize : Customizes the viewer
-  place : Places the viewer on the calculator
-  update : Updates the viewer
-  """
+	```
+	Methods
+	-------
+	customize : Customizes the viewer
+	place : Places the viewer on the calculator
+	update : Updates the viewer
+	"""
 
-  """ Initialize the class instance.
-  
-  @param master : Calculator application root
-  @type master : tk.Tk()
-  """
-  def __init__(self, master):
-    super().__init__(master)
-    self.view = None
+	""" Initialize the class instance.
 
-    self.customize()
+	@param master : Calculator application root
+	@type master : tk.Tk()
+	"""
+	def __init__(self, master):
+		super().__init__(master)
+		self.view = None
 
-  """ Returns the viewers view.
+		self.customize()
 
-  @return view : The viewers view
-  @rtype view : 
-  """
-  def get_view(self):
-    return self.view
+	""" Returns the viewers view.
 
-  """ Sets the viewers view.
+	@return view : The viewers view
+	@rtype view : 
+	"""
+	def get_view(self):
+		return self.view
 
-  @param view : The viewers view
-  @type view : 
-  """
-  def set_view(self, view):
-    self.view = view
+	""" Sets the viewers view.
 
-  """ Updates the view with new text.
+	@param view : The viewers view
+	@type view : 
+	"""
+	def set_view(self, view):
+		self.view = view
 
-  @param updates : The views updates
-  @type updates : str
-  """
-  def update(self, updates):
-    self.get_view().config(text=updates)
+	""" Updates the view with new text.
 
-  """ Customizes the viewer.
+	@param updates : The views updates
+	@type updates : str
+	"""
+	def update(self, updates):
+		self.get_view().config(text=updates)
 
-  @return null
-  """
-  def customize(self):
-    self.set_view(tk.Label(self, text=''))
-    self.get_view().grid(row=0, column=0, padx=15)
+	""" Customizes the viewer.
 
-  """ Places the viewer on the calculator.
+	@return null
+	"""
+	def customize(self):
+		super().config(bg='gray87')
+		self.set_view(tk.Label(self,
+								text='',
+								bg='gray88'))
+		self.get_view().grid(row=0, column=0, padx=15)
 
-  @param row : The viewers row
-  @type row : int
+	""" Places the viewer on the calculator.
 
-  @param col : The viewers column
-  @type col : int
-  """
-  def place(self, row, col):
-    self.grid(row=row, column=col)
+	@param row : The viewers row
+	@type row : int
+
+	@param col : The viewers column
+	@type col : int
+	"""
+	def place(self, row, col):
+		self.grid(row=row, column=col)
 

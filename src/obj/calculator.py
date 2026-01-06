@@ -1,4 +1,5 @@
 """ Native imports. """
+import asyncio
 import tkinter as tk
 
 """ Class imports. """
@@ -6,125 +7,162 @@ from obj.controller import Controller
 from obj.viewer import Viewer
 
 class Calculator():
-  """ 
-    A class representation of a calculator.
+	""" 
+	A class representation of a calculator.
 
-    ```
-    Attributes
-    ----------
-    root : The calculators tk application
-    controller : The calculators controller
-    nviewer : The calulators new viewer
-    pviewer : The calculators previous viewer
-    
-    ```
-    Methods
-    -------
-    customize : Customizes the calculator
-    fill : Fills the calculator with corresponding components
-    run : Starts the calculator application
-  """
+	```
+	Attributes
+	----------
+	root : The calculator's tk application
+	controller : The calculator's controller
+	nviewer : The calculator's new viewer
+	pviewer : The calculator's previous viewer
 
-  """ Initialize class instance. """
-  def __init__(self): 
-    self.root = tk.Tk()
-    self.controller = None
-    self.nviewer = None
-    self.pviewer = None
+	```
+	Methods
+	-------
+	customize : Customizes the calculator
+	fill : Fills the calculator with corresponding components
+	run : Starts the calculator application
+	"""
 
-  """ Returns the calculators root.
+	""" Initialize class instance. """
+	def __init__(self): 
+		self.root = tk.Tk()
+		self.controller = None
+		self.nviewer = None
+		self.pviewer = None
+		self.open = False
 
-  @return root : The calculators app
-  @rtype root : tk.Tk()
-  """
-  def get_root(self):
-    return self.root
+	""" Returns the calculator's root.
 
-  """ Sets the calculators root. 
+	@return root : The calculator's app
+	@rtype root : tk.Tk()
+	"""
+	def get_root(self):
+		return self.root
 
-  @param root : The calculators app
-  @type root : tk.Tk()
-  """
-  def set_root(self, root):
-    self.root = root
+	""" Sets the calculator's root. 
 
-  """ Returns the calculators controller.
+	@param root : The calculator's app
+	@type root : tk.Tk()
+	"""
+	def set_root(self, root):
+		self.root = root
 
-  @return controller : The calculators controller
-  @rtype controller : tk.Frame
-  """
-  def get_controller(self):
-    return self.controller
+	""" Returns the calculator's controller.
 
-  """ Sets the calculators controller. 
+	@return controller : The calculator's controller
+	@rtype controller : tk.Frame
+	"""
+	def get_controller(self):
+		return self.controller
 
-  @param controller : The apps controller
-  @type controller : tk.Frame
-  """
-  def set_controller(self, controller):
-    self.controller = controller
+	""" Sets the calculator's controller. 
 
-  """ Returns the calculators viewer.
+	@param controller : The apps controller
+	@type controller : tk.Frame
+	"""
+	def set_controller(self, controller):
+		self.controller = controller
 
-  @return viewer : The calculators viewer
-  @rtype viewer : tk.Frame
-  """
-  def get_nviewer(self):
-    return self.viewer
+	""" Returns the calculator's viewer.
 
-  """ Sets the calculators viewer.
+	@return viewer : The calculator's viewer
+	@rtype viewer : tk.Frame
+	"""
+	def get_nviewer(self):
+		return self.viewer
 
-  @param viewer : The calculators viewer
-  @type viewer : tk.Frame
-  """
-  def set_nviewer(self, viewer):
-    self.viewer = viewer
+	""" Sets the calculator's viewer.
 
-  """ Returns the calculators viewer.
+	@param viewer : The calculator's viewer
+	@type viewer : tk.Frame
+	"""
+	def set_nviewer(self, viewer):
+		self.viewer = viewer
 
-  @return viewer : The calculators viewer
-  @rtype viewer : tk.Frame
-  """
-  def get_pviewer(self):
-    return self.pviewer
+	""" Returns the calculator's viewer.
 
-  """ Sets the calculators viewer.
+	@return viewer : The calculator's viewer
+	@rtype viewer : tk.Frame
+	"""
+	def get_pviewer(self):
+		return self.pviewer
 
-  @param viewer : The calculators viewer
-  @type viewer : tk.Frame
-  """
-  def set_pviewer(self, pviewer):
-    self.pviewer = pviewer
+	""" Sets the calculator's viewer.
 
-  """ Fills the calculators with its components.
+	@param viewer : The calculator's viewer
+	@type viewer : tk.Frame
+	"""
+	def set_pviewer(self, pviewer):
+		self.pviewer = pviewer
 
-  @return null
-  """
-  def fill(self):
-    self.set_nviewer(Viewer(self.get_root()))
-    self.set_pviewer(Viewer(self.get_root()))
-    self.set_controller(Controller(self.get_root(), self))
+	def get_open(self):
+		return self.open
 
-  """ Customizes the calculator.
-  
-  @return null
-  """
-  def customize(self):
+	def set_open(self, open):
+		self.open = open
 
-    self.get_pviewer().place(0,0)
-    self.get_pviewer().get_view().configure(width=50, anchor='e', font=('Arial', 7))
-    
-    self.get_nviewer().place(1,0)
-    self.get_nviewer().get_view().configure(width=30, anchor='e', font=('Arial', 15))
-    
-    self.get_controller().place(2,0)
+	def throw_exec(self, mes):
 
-  """ Starts the calculator application. 
+		if (mes == 'run'):
+			print('[!] Error running calculator.')
+		elif (mes == 'custom'):
+			print('[!] Error customizing ui elements.')
+		elif (mes == 'fill'):
+			print('[!] Error filling calculator ui.')
 
-  @return null
-  """
-  def run(self):
+	""" Fills the calculator's with its components.
 
-    self.fill()
-    self.customize()
-    self.get_root().mainloop()
+	@return null
+	"""
+	async def fill(self):
+
+		try:
+			self.set_nviewer(Viewer(self.get_root()))
+			self.set_pviewer(Viewer(self.get_root()))
+			self.set_controller(Controller(self.get_root(), self))
+		except Exception as ex:
+			self.throw_exec('fill')
+
+	""" Customizes the calculator.
+
+	@return null
+	"""
+	async def customize(self):
+
+		try:
+			self.get_pviewer().place(0,0)
+			self.get_pviewer().get_view().configure(padx=0, font=('Courier New', 15))
+
+			self.get_nviewer().place(1,0)
+			self.get_nviewer().get_view().configure(padx=0, font=('Courier New', 15))
+
+			self.get_controller().place(2,0)
+		except Exception as ex:
+			self.throw_exec('custom')
+
+	""" Starts the calculator application. 
+
+	@return null
+	"""
+	async def run(self):
+
+		try:
+			print('[!] Running calculator.')
+			
+			await self.fill()
+			await self.customize()
+			self.get_root().title('Calculator')
+			self.get_root().config(bg='gray87')
+			self.set_open(True)
+
+			while True:
+				self.get_root().update()
+				await asyncio.sleep(.1)
+		except asyncio.CancelledError:
+			print('[!] Tasks were cancelled.')
+		except Exception as ex:
+			self.throw_exec('run')
+
