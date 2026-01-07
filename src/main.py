@@ -1,8 +1,14 @@
+""" Native imports. """
 import asyncio
 
 """ Class imports. """
 from obj.calculator import Calculator
 
+""" Throws a specified exception.
+
+@param mes : The exceptin
+@type mes : string
+"""
 def throw_exec(mes):
 
 	if (mes == 'main'):

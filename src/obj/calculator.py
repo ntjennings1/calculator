@@ -7,7 +7,7 @@ from obj.controller import Controller
 from obj.viewer import Viewer
 
 class Calculator():
-	""" 
+	"""
 	A class representation of a calculator.
 
 	```
@@ -17,17 +17,20 @@ class Calculator():
 	controller : The calculator's controller
 	nviewer : The calculator's new viewer
 	pviewer : The calculator's previous viewer
+	bviewer : The calculator's blank viewer
+	open : The calculator's open status
 
 	```
 	Methods
 	-------
+	throw_exec : Throws a specified exception
 	customize : Customizes the calculator
 	fill : Fills the calculator with corresponding components
 	run : Starts the calculator application
 	"""
 
 	""" Initialize class instance. """
-	def __init__(self): 
+	def __init__(self):
 		self.root = tk.Tk()
 		self.controller = None
 		self.nviewer = None
@@ -37,15 +40,15 @@ class Calculator():
 
 	""" Returns the calculator's root.
 
-	@return root : The calculator's app
+	@return root : The calculator's root
 	@rtype root : tk.Tk()
 	"""
 	def get_root(self):
 		return self.root
 
-	""" Sets the calculator's root. 
+	""" Sets the calculator's root.
 
-	@param root : The calculator's app
+	@param root : The calculator's root
 	@type root : tk.Tk()
 	"""
 	def set_root(self, root):
@@ -54,63 +57,88 @@ class Calculator():
 	""" Returns the calculator's controller.
 
 	@return controller : The calculator's controller
-	@rtype controller : tk.Frame
+	@rtype controller : Object.class
 	"""
 	def get_controller(self):
 		return self.controller
 
-	""" Sets the calculator's controller. 
+	""" Sets the calculator's controller.
 
 	@param controller : The apps controller
-	@type controller : tk.Frame
+	@type controller : Object.class
 	"""
 	def set_controller(self, controller):
 		self.controller = controller
 
-	""" Returns the calculator's viewer.
+	""" Returns the calculator's new viewer.
 
-	@return viewer : The calculator's viewer
-	@rtype viewer : tk.Frame
+	@return viewer : The calculator's new viewer
+	@rtype viewer : Object.class
 	"""
 	def get_nviewer(self):
-		return self.viewer
+		return self.nviewer
 
-	""" Sets the calculator's viewer.
+	""" Sets the calculator's new viewer.
 
-	@param viewer : The calculator's viewer
-	@type viewer : tk.Frame
+	@param nviewer : The calculator's viewer
+	@type nviewer : Object.class
 	"""
-	def set_nviewer(self, viewer):
-		self.viewer = viewer
+	def set_nviewer(self, nviewer):
+		self.nviewer = nviewer
 
-	""" Returns the calculator's viewer.
+	""" Returns the calculator's previous viewer.
 
-	@return viewer : The calculator's viewer
-	@rtype viewer : tk.Frame
+	@return viewer : The calculator's previous viewer
+	@rtype viewer : Object.class
 	"""
 	def get_pviewer(self):
 		return self.pviewer
 
-	""" Sets the calculator's viewer.
+	""" Sets the calculator's previous viewer.
 
-	@param viewer : The calculator's viewer
-	@type viewer : tk.Frame
+	@param viewer : A previous viewer
+	@type viewer : Object.class
 	"""
 	def set_pviewer(self, pviewer):
 		self.pviewer = pviewer
 
+	""" Returns the calculator's blank viewer.
+
+	@return bviewer : The calculators blank viewer
+	@rtype bviewer : Object.class
+	"""
 	def get_bviewer(self):
 		return self.bviewer
 
+	""" Sets the calculator's blank viewer.
+
+	@param bviewer : A blank view
+	@type bviewer : Object.class
+	"""
 	def set_bviewer(self, bviewer):
 		self.bviewer = bviewer
 
+	""" Returns the calculator's open status.
+
+	@return open : The calculator's open status
+	@rtype open : bool
+	"""
 	def get_open(self):
 		return self.open
 
+	""" Sets the calculator's open status.
+
+	@param open : An open status
+	@type open : bool
+	"""
 	def set_open(self, open):
 		self.open = open
 
+	""" Throws a specified exception.
+
+	@param mes : An exception
+	@type mes : string
+	"""
 	def throw_exec(self, mes):
 
 		if (mes == 'run'):
@@ -154,7 +182,7 @@ class Calculator():
 		except Exception as ex:
 			self.throw_exec('custom')
 
-	""" Starts the calculator application. 
+	""" Starts the calculator application.
 
 	@return null
 	"""

@@ -14,8 +14,8 @@ class Viewer(tk.Frame):
 	Methods
 	-------
 	customize : Customizes the viewer
-	place : Places the viewer on the calculator
 	update : Updates the viewer
+	place : Places the viewer on the calculator
 	"""
 
 	""" Initialize the class instance.
@@ -32,7 +32,7 @@ class Viewer(tk.Frame):
 	""" Returns the viewers view.
 
 	@return view : The viewers view
-	@rtype view : 
+	@rtype view : tk.Label()
 	"""
 	def get_view(self):
 		return self.view
@@ -40,7 +40,7 @@ class Viewer(tk.Frame):
 	""" Sets the viewers view.
 
 	@param view : The viewers view
-	@type view : 
+	@type view : tk.Label()
 	"""
 	def set_view(self, view):
 		self.view = view
