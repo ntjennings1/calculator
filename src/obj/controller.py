@@ -706,6 +706,7 @@ class Controller(tk.Frame):
 			self.set_db(sqlite3.connect(self.get_db_path()))
 		except Exception as ex:
 			self.throw_exec('con')
+
 	def diresolve(self):
 		try:
 			script_dir = os.path.dirname(os.path.abspath(__file__))

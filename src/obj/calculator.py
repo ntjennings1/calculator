@@ -36,7 +36,6 @@ class Calculator():
 		self.nviewer = None
 		self.pviewer = None
 		self.bviewer = None
-
 		self.open = False
 
 	def get_scenario(self):
