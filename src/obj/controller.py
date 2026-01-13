@@ -1,5 +1,6 @@
 """ Native imports. """
 import os
+import asyncio
 import time
 import tkinter as tk
 import ast
@@ -80,6 +81,10 @@ class Controller(tk.Frame):
 		self.div_button = None
 		self.exp_button = None
 		self.mod_button = None
+		self.fact_button = None
+		self.sin_button = None
+		self.cos_button = None
+		self.tan_button = None
 		self.back_button = None
 		self.up_button = None
 		self.down_button = None
@@ -90,9 +95,9 @@ class Controller(tk.Frame):
 		self.index = 0
 		self.travelling = False
 		self.db = None
-		self.db_path=''
+		self.db_path = None
 
-		self.connect()
+		self.diresolve()
 		self.customize()
 
 	""" Returns the controllers calculator.
@@ -403,7 +408,17 @@ class Controller(tk.Frame):
 
 	def throw_exec(self, mes):
 
-		if (mes == 'close'):
+		if (mes == 'cust'):
+			print('[!] Error customizing controller.')
+		elif (mes == 'create'):
+			print('[!] Error creating controller.')
+		elif (mes == 'dir'):
+			print('[!] Error resolving directory structure.')
+		elif (mes == 'con'):
+			print('[!] Error connecting to database.')
+		elif (mes == 'query'):
+			print('[!] Error querying database.')
+		elif (mes == 'close'):
 			print('[!] Error closing calculator.')
 
 	""" Checks the input character for possible errors.
@@ -413,9 +428,9 @@ class Controller(tk.Frame):
 	"""
 	def check(self, var):
 
-		ops = ['+', '-', '/', '*', '**', '.', '%'] 
+		ops = ['+', '-', '/', '*', '**', '.', '%']
 		par = ['(', ')']
-		last = None 
+		last = None
 
 		if (len(self.get_equation()) == 0):
 			pass
@@ -568,92 +583,93 @@ class Controller(tk.Frame):
 	@return null
 	"""
 	def customize(self):
-		font = ('Courier New', 20)
+		try:
+			font = ('Courier New', 20)
 
-		# Number buttons
-		self.set_zed_button(tk.Button(self, text="0", command=lambda: self.press('0'), width='6', height='2', font=font))
-		self.set_one_button(tk.Button(self, text="1", command=lambda: self.press('1'), width='6', height='2', font=font))
-		self.set_two_button(tk.Button(self, text="2", command=lambda: self.press('2'), width='6', height='2', font=font))
-		self.set_three_button(tk.Button(self, text="3", command=lambda: self.press('3'), width='6', height='2', font=font))
-		self.set_four_button(tk.Button(self, text="4", command=lambda: self.press('4'), width='6', height='2', font=font))
-		self.set_five_button(tk.Button(self, text="5", command=lambda: self.press('5'), width='6', height='2', font=font))
-		self.set_six_button(tk.Button(self, text="6", command=lambda: self.press('6'), width='6', height='2', font=font))
-		self.set_seven_button(tk.Button(self, text="7", command=lambda: self.press('7'), width='6', height='2', font=font))
-		self.set_eight_button(tk.Button(self, text="8", command=lambda: self.press('8'), width='6', height='2', font=font))
-		self.set_nine_button(tk.Button(self, text="9", command=lambda: self.press('9'), width='6', height='2', font=font))
-		self.set_deci_button(tk.Button(self, text=".", command=lambda: self.check('.'), width='6', height='2', font=font))
-		self.set_blank_button(tk.Button(self, text=" ", state=tk.DISABLED, width='6', height='2', font=font, bg='orange'))
+			# Number buttons
+			self.set_zed_button(tk.Button(self, text="0", command=lambda: self.press('0'), width='6', height='2', font=font))
+			self.set_one_button(tk.Button(self, text="1", command=lambda: self.press('1'), width='6', height='2', font=font))
+			self.set_two_button(tk.Button(self, text="2", command=lambda: self.press('2'), width='6', height='2', font=font))
+			self.set_three_button(tk.Button(self, text="3", command=lambda: self.press('3'), width='6', height='2', font=font))
+			self.set_four_button(tk.Button(self, text="4", command=lambda: self.press('4'), width='6', height='2', font=font))
+			self.set_five_button(tk.Button(self, text="5", command=lambda: self.press('5'), width='6', height='2', font=font))
+			self.set_six_button(tk.Button(self, text="6", command=lambda: self.press('6'), width='6', height='2', font=font))
+			self.set_seven_button(tk.Button(self, text="7", command=lambda: self.press('7'), width='6', height='2', font=font))
+			self.set_eight_button(tk.Button(self, text="8", command=lambda: self.press('8'), width='6', height='2', font=font))
+			self.set_nine_button(tk.Button(self, text="9", command=lambda: self.press('9'), width='6', height='2', font=font))
+			self.set_deci_button(tk.Button(self, text=".", command=lambda: self.check('.'), width='6', height='2', font=font))
+			self.set_blank_button(tk.Button(self, text=" ", state=tk.DISABLED, width='6', height='2', font=font, bg='orange'))
 
-		self.add_num_button(self.get_zed_button())
-		self.add_num_button(self.get_one_button())
-		self.add_num_button(self.get_two_button())
-		self.add_num_button(self.get_three_button())
-		self.add_num_button(self.get_four_button())
-		self.add_num_button(self.get_five_button())
-		self.add_num_button(self.get_six_button())
-		self.add_num_button(self.get_seven_button())
-		self.add_num_button(self.get_eight_button())
-		self.add_num_button(self.get_nine_button())
-		self.add_num_button(self.get_deci_button())
-		self.add_num_button(self.get_blank_button())
-		
-		self.get_deci_button().grid(row=5, column=0)
-		self.get_zed_button().grid(row=5, column=1)
-		self.get_one_button().grid(row=4, column=0)
-		self.get_two_button().grid(row=4, column=1)
-		self.get_three_button().grid(row=4, column=2)
-		self.get_four_button().grid(row=3, column=0)
-		self.get_five_button().grid(row=3, column=1)
-		self.get_six_button().grid(row=3, column=2)
-		self.get_seven_button().grid(row=2, column=0)
-		self.get_eight_button().grid(row=2, column=1)
-		self.get_nine_button().grid(row=2, column=2)
+			self.add_num_button(self.get_zed_button())
+			self.add_num_button(self.get_one_button())
+			self.add_num_button(self.get_two_button())
+			self.add_num_button(self.get_three_button())
+			self.add_num_button(self.get_four_button())
+			self.add_num_button(self.get_five_button())
+			self.add_num_button(self.get_six_button())
+			self.add_num_button(self.get_seven_button())
+			self.add_num_button(self.get_eight_button())
+			self.add_num_button(self.get_nine_button())
+			self.add_num_button(self.get_deci_button())
+			self.add_num_button(self.get_blank_button())
 
-		# Operation buttons
-		self.set_minus_button(tk.Button(self, text="-", command=lambda: self.check('-'), width='6', height='2', font=font, bg='orange'))
-		self.set_plus_button(tk.Button(self, text="+", command=lambda: self.check('+'), width='6', height='2', font=font, bg='orange'))
-		self.set_mult_button(tk.Button(self, text="*", command=lambda: self.check('*'), width='6', height='2', font=font, bg='orange'))
-		self.set_div_button(tk.Button(self, text="/", command=lambda: self.check('/'), width='6', height='2', font=font, bg='orange'))
-		self.set_lpar_button(tk.Button(self, text="(", command=lambda: self.check('('), width='6', height='2', font=font, bg='orange'))
-		self.set_rpar_button(tk.Button(self, text=")", command=lambda: self.check(')'), width='6', height='2', font=font, bg='orange'))
-		self.set_exp_button(tk.Button(self, text="^", command=lambda: self.check('**'), width='6', height='2', font=font, bg='orange'))
-		self.set_mod_button(tk.Button(self, text="mod", command=lambda: self.check('%'), width='6', height='2', font=font, bg='orange'))
-		self.set_clear_button(tk.Button(self, text="C", command=self.clear, width='6', height='2', font=font, bg='orange'))
-		self.set_eq_button(tk.Button(self, text="=", command=self.equate, width='6', height='2', font=font, bg='orange'))
-		self.set_back_button(tk.Button(self, text='<', command=self.delete, width='6', height='2', font=font, bg='orange'))
-		self.set_exit_button(tk.Button(self, text="EXIT", command=self.close, width='6', height='2', font=font, bg='orange'))
-		self.set_up_button(tk.Button(self, text="\u2191", command=self.up, width='6', height='2', font=font, bg='orange'))
-		self.set_down_button(tk.Button(self, text=" \u2193", command=self.down, width='6', height='2', font=font, bg='orange'))
+			self.get_deci_button().grid(row=5, column=0, padx=2, pady=2)
+			self.get_zed_button().grid(row=5, column=1, padx=2, pady=2)
+			self.get_one_button().grid(row=4, column=0, padx=2, pady=2)
+			self.get_two_button().grid(row=4, column=1, padx=2, pady=2)
+			self.get_three_button().grid(row=4, column=2, padx=2, pady=2)
+			self.get_four_button().grid(row=3, column=0, padx=2, pady=2)
+			self.get_five_button().grid(row=3, column=1, padx=2, pady=2)
+			self.get_six_button().grid(row=3, column=2, padx=2, pady=2)
+			self.get_seven_button().grid(row=2, column=0, padx=2, pady=2)
+			self.get_eight_button().grid(row=2, column=1, padx=2, pady=2)
+			self.get_nine_button().grid(row=2, column=2, padx=2, pady=2)
 
-		self.add_op_button(self.get_minus_button())
-		self.add_op_button(self.get_plus_button())
-		self.add_op_button(self.get_mult_button())
-		self.add_op_button(self.get_div_button())
-		self.add_op_button(self.get_lpar_button())
-		self.add_op_button(self.get_rpar_button())
-		self.add_op_button(self.get_exp_button())
-		self.add_op_button(self.get_clear_button())
-		self.add_op_button(self.get_eq_button())
-		self.add_op_button(self.get_back_button())
-		self.add_op_button(self.get_exit_button())
-		self.add_op_button(self.get_up_button())
-		self.add_op_button(self.get_down_button())
+			# Operation buttons
+			self.set_minus_button(tk.Button(self, text="-", command=lambda: self.check('-'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_plus_button(tk.Button(self, text="+", command=lambda: self.check('+'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_mult_button(tk.Button(self, text="x", command=lambda: self.check('*'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_div_button(tk.Button(self, text="/", command=lambda: self.check('/'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_lpar_button(tk.Button(self, text="(", command=lambda: self.check('('), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_rpar_button(tk.Button(self, text=")", command=lambda: self.check(')'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_exp_button(tk.Button(self, text="^", command=lambda: self.check('**'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_mod_button(tk.Button(self, text="mod", command=lambda: self.check('%'), width='6', height='2', font=font, bg='skyblue1'))
+			self.set_clear_button(tk.Button(self, text="C", command=self.clear, width='6', height='2', font=font, bg='skyblue1'))
+			self.set_eq_button(tk.Button(self, text="=", command=self.equate, width='6', height='2', font=font, bg='skyblue1'))
+			self.set_back_button(tk.Button(self, text='<', command=self.delete, width='6', height='2', font=font, bg='skyblue1'))
+			self.set_exit_button(tk.Button(self, text="EXIT", command=self.close, width='6', height='2', font=font, bg='skyblue1'))
+			self.set_up_button(tk.Button(self, text="\u2191", command=self.up, width='6', height='2', font=font, bg='skyblue1'))
+			self.set_down_button(tk.Button(self, text=" \u2193", command=self.down, width='6', height='2', font=font, bg='skyblue1'))
 
-		self.get_exit_button().grid(row=0, column=0)
-		self.get_blank_button().grid(row=0, column=1)
-		self.get_up_button().grid(row=0, column=2)
-		self.get_down_button().grid(row=0, column=3)
-		self.get_mod_button().grid(row=1, column=0)
-		self.get_lpar_button().grid(row=1, column=1)
-		self.get_rpar_button().grid(row=1, column=2)
-		self.get_div_button().grid(row=1, column=3)
-		self.get_mult_button().grid(row=2, column=3)
-		self.get_minus_button().grid(row=3, column=3)
-		self.get_plus_button().grid(row=4, column=3)
-		self.get_eq_button().grid(row=5, column=3)
-		self.get_clear_button().grid(row=5, column=2)
-		
-		#self.get
+			self.add_op_button(self.get_minus_button())
+			self.add_op_button(self.get_plus_button())
+			self.add_op_button(self.get_mult_button())
+			self.add_op_button(self.get_div_button())
+			self.add_op_button(self.get_lpar_button())
+			self.add_op_button(self.get_rpar_button())
+			self.add_op_button(self.get_exp_button())
+			self.add_op_button(self.get_clear_button())
+			self.add_op_button(self.get_eq_button())
+			self.add_op_button(self.get_back_button())
+			self.add_op_button(self.get_exit_button())
+			self.add_op_button(self.get_up_button())
+			self.add_op_button(self.get_down_button())
+
+			self.get_exit_button().grid(row=0, column=0, padx=2, pady=2)
+			self.get_back_button().grid(row=0, column=1, padx=2, pady=2)
+			self.get_up_button().grid(row=0, column=2, padx=2, pady=2)
+			self.get_down_button().grid(row=0, column=3, padx=2, pady=2)
+			self.get_mod_button().grid(row=1, column=0, padx=2, pady=2)
+			self.get_lpar_button().grid(row=1, column=1, padx=2, pady=2)
+			self.get_rpar_button().grid(row=1, column=2, padx=2, pady=2)
+			self.get_div_button().grid(row=1, column=3, padx=2, pady=2)
+			self.get_mult_button().grid(row=2, column=3, padx=2, pady=2)
+			self.get_minus_button().grid(row=3, column=3, padx=2, pady=2)
+			self.get_plus_button().grid(row=4, column=3, padx=2, pady=2)
+			self.get_eq_button().grid(row=5, column=3, padx=2, pady=2)
+			self.get_clear_button().grid(row=5, column=2, padx=2, pady=2)
+		except Exception as ex:
+			self.throw_exec('cust')
 
 	""" Places the controller on the calculator.
 
@@ -667,34 +683,50 @@ class Controller(tk.Frame):
 	@return null
 	"""
 	def querry(self):
-		cursor = self.get_db().cursor()
-		cursor.execute("SELECT * FROM previous_table")
+		try:
+			cursor = self.get_db().cursor()
+			cursor.execute("SELECT * FROM previous_table")
 
-		rows=[]
-		for i in cursor.fetchall():
-			rows.append(i[0])
+			rows=[]
+			for i in cursor.fetchall():
+				rows.append(i[0])
 
-		self.set_previous_equations(rows)
-		self.get_calc().get_pviewer().update(self.get_previous_equations()[-1])
-		cursor.close()
+			self.set_previous_equations(rows)
+			self.get_calc().get_pviewer().update(self.get_previous_equations()[-1])
+			cursor.close()
+		except Exception as ex:
+			self.throw_exec('query')
 
 	""" Connects to database and creates table.
 
 	@return null
 	"""
-	def connect(self):
-
+	async def connect(self):
 		try:
-			root_dir = os.path.dirname(os.path.abspath(__file__))
-			self.set_db_path(os.path.join(root_dir, r'../data/data.db'))
+			self.set_db(sqlite3.connect(self.get_db_path()))
+		except Exception as ex:
+			self.throw_exec('con')
+	def diresolve(self):
+		try:
+			script_dir = os.path.dirname(os.path.abspath(__file__))
+			src_dir = os.path.dirname(script_dir)
+			proj_dir = os.path.dirname(src_dir)
+			data_dir = os.path.join(proj_dir, "data")
+			data_path = os.path.join(data_dir, "data.db")
+
+			self.set_db_path(data_path)
+		except Exception as ex:
+			self.throw_exec('dir')
+
+	async def create(self):
+		try:
 			create_command = """
 			CREATE TABLE previous_table (
 			content TEXT NOT_NULL
 			)
 			"""
-			self.set_db(sqlite3.connect(self.get_db_path()))
-			self.get_db().execute('DROP TABLE IF EXISTS previous_table')
-			self.get_db().execute(create_command)
+			await self.connect()
+			self.get_db().cursor().execute('DROP TABLE IF EXISTS previous_table')
+			self.get_db().cursor().execute(create_command)
 		except Exception as ex:
-			print('Error connecting to database')
-			self.close()
+			self.throw_exec('create')
