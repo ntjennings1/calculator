@@ -25,7 +25,6 @@ git clone https://www.github.com/ntjennings1/calculator.git
 ```
 
 Open the command prompt and enter your chosen home directory of the project.
-
 ```
 cd $CALC_HOME
 ```
