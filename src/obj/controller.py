@@ -712,17 +712,19 @@ class Controller(tk.Frame):
 	def throw_exec(self, mes):
 
 		if (mes == 'cust'):
-			print('[!] Error customizing controller.')
+			print('[Err] Error customizing controller.')
 		elif (mes == 'create'):
-			print('[!] Error creating controller.')
+			print('[Err] Error creating controller.')
 		elif (mes == 'dir'):
-			print('[!] Error resolving directory structure.')
+			print('[Err] Error resolving directory structure.')
 		elif (mes == 'con'):
-			print('[!] Error connecting to database.')
+			print('[Err] Error connecting to database.')
 		elif (mes == 'query'):
-			print('[!] Error querying database.')
+			print('[!Err] Error querying database.')
+		elif (mes == 'up'):
+			print('[Err] Error travelling upwards.')
 		elif (mes == 'close'):
-			print('[!] Error closing calculator.')
+			print('[Err] Error closing calculator.')
 
 	""" Checks the input character for possible errors.
 
@@ -818,28 +820,31 @@ class Controller(tk.Frame):
 	@return null
 	"""
 	def up(self):
+		try:
+			if len(self.get_previous_equations()) > 0:
 
-		if len(self.get_previous_equations()) > 0:
-
-			if not self.get_travelling():
-				self.set_index(len(self.get_previous_equations())-1)
-				self.set_equation(self.get_previous_equations()[self.get_index()])
-				self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()])
-				if len(self.get_previous_equations()) == 1:
-					self.get_calc().get_pviewer().update('')
-				else:
-					self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])
-					self.set_travelling(True)
-
-			elif self.get_travelling():
-				if self.get_index() > 0:
-					self.set_index(self.get_index()-1)
+				if not self.get_travelling():
+					self.set_index(len(self.get_previous_equations())-1)
 					self.set_equation(self.get_previous_equations()[self.get_index()])
-					self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()]) 
-					if self.get_index()-1 >= 0:
-						self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])   
+					self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()])
+					if len(self.get_previous_equations()) == 1:
+						self.get_calc().get_pviewer().update('')
 					else:
-						self.get_calc().get_pviewer().update('') 
+						self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])
+						self.set_travelling(True)
+
+				elif self.get_travelling():
+					if self.get_index() > 0:
+						self.set_index(self.get_index()-1)
+						self.set_equation(self.get_previous_equations()[self.get_index()])
+						self.get_calc().get_nviewer().update(self.get_previous_equations()[self.get_index()]) 
+						if self.get_index()-1 >= 0:
+							self.get_calc().get_pviewer().update(self.get_previous_equations()[self.get_index()-1])   
+						else:
+							self.get_calc().get_pviewer().update('None left.')
+		except Exception as ex:
+			print(ex)
+			self.throw_exec('up')
 
 	""" Scrolls downward in previous equations.
 

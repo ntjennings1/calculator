@@ -1,4 +1,4 @@
-<p align="center"> <img src="./src/images/calc_UI.png" width="300"> </p>
+<p align="center"> <img src="./src/images/calc_UI.png" width="250"> </p>
 
 # Calculator
 
@@ -40,7 +40,7 @@ python -m venv venv
 
 Then activate the virtual environment with this:
 ```
-\venv\Scripts\activate
+.\venv\Scripts\activate
 ```
 
 OR with this on Linux distributions:

@@ -12,6 +12,7 @@ class Scenario():
     Attributes
     ----------
     system : The scenario's name
+    server : The scenario's server
     dir : The scenario's directory
     req_file : The scenario's requirements file
     req : The scenario's requirements
@@ -34,7 +35,8 @@ class Scenario():
     """
     def __init__(self):
         self.system = ""
-        
+        self.server = None
+
         self.dir = os.path.dirname(os.path.abspath(__file__))
         self.req_file = None
         self.reqs = []
@@ -59,6 +61,22 @@ class Scenario():
     """
     def set_system(self, system):
         self.system = system
+
+    """ Returns the scenario's server.
+
+    @return server : The scenario's server
+    @rtype server : Obj.class
+    """
+    def get_server(self):
+        return self.server
+
+    """ Sets the scenario's server.
+
+    @param server : A server
+    @type server : Obj.class
+    """
+    def set_server(self, server):
+        self.server = server
 
     """ Returns the scenario's directory.
 
@@ -167,8 +185,8 @@ class Scenario():
             print('[!] Error reading system name.')
         elif (mes == 'clear'):
             print('[!] Error clearing terminal.')
-        elif (mes == 'dir'):
-            print('[!] Error resolving directories.')
+        elif (mes == 'req'):
+            print('[!] Error reading requirements.')
         elif (mes == 'pkg'):
             print('[!] Error satisfying dependencies.')
 
@@ -185,17 +203,46 @@ class Scenario():
         except Exception as ex:
             self.throw_exec('clear')
 
-    async def diresolve(self):
+    """ Satisfies required packages.
 
+    @return null
+    """
+    async def pkgresolve(self):
         try:
-            print('[!] Resolving directories ...')
-            src_dir = os.path.dirname(self.get_dir())
-            project_dir = os.path.dirname(src_dir)
-            data_dir = os.path.join(project_dir, "data")
-            data_path = os.path.join(data_dir, "data.db")
-            os.makedirs(data_dir, exist_ok=True)
+            print('[!] Comparing installed packages ...')
+            for dist in distributions():
+                self.add_package(dist.metadata['Name'] + '==' + dist.version)
+
+            for r in self.get_reqs():
+                if r in self.get_packages():
+                    pass
+                else:
+                    print('[!] Installing ' + r)
+                    subprocess.check_call([sys.executable, "-m", "pip", "install", str(r)])
+                    self.add_package(r)
+                print(f'[!] {r} installed.')
+            print('[-->] All requirements satisfied.')
         except Exception as ex:
-            self.throw_exec('dir')
+            self.throw_exec('pkg')
+
+    """ Determines required packages.
+
+    @return null
+    """
+    async def reqresolve(self):
+        try:
+            print('[!] Checking dependencies ...')
+            project_dir = os.path.dirname(os.path.dirname(self.get_dir()))
+            self.set_rfile(os.path.join(project_dir, 'requirements.txt'))
+
+            with open (self.get_rfile(), 'r') as req_file:
+                for line in req_file:
+                    if ('\n' in line):
+                        self.add_req(line.replace('\n', ''))
+                    else:
+                        self.add_req(line)
+        except Exception as ex:
+            self.throw_exec('req')
 
     """ Evaluates the system.
     
@@ -205,8 +252,10 @@ class Scenario():
         try:
             if (os.name == 'nt'):
                 self.set_system('Windows')
+                print('[&] Windows system.')
             else:
                 self.set_system('Linux')
+                print('[&] Linux system.')
 
         except Exception as ex:
             self.throw_exec('read')

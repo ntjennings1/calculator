@@ -3,6 +3,7 @@ import asyncio
 
 """ Class imports. """
 from obj.calculator import Calculator
+from obj.scenario import Scenario
 
 """ Throws a specified exception.
 
@@ -23,9 +24,17 @@ def throw_exec(mes):
 async def main():
 
 	try:
-		calc = Calculator()
+		scene = Scenario()
+		await scene.reqresolve()
+		await scene.pkgresolve()
+
+		calc = Calculator(scene, asyncio.get_event_loop())
 		await calc.run()
+
+		while True:
+			await asyncio.sleep(3600)
 	except Exception as ex:
+		print(ex)
 		throw_exec('cboot')
 
 """ Runs the main function.

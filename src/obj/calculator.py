@@ -31,8 +31,9 @@ class Calculator():
 	"""
 
 	""" Initialize class instance. """
-	def __init__(self):
-		self.scenario = Scenario()
+	def __init__(self, scenario, loop):
+		self.scenario = scenario
+		self.loop = loop
 		self.root = tk.Tk()
 		self.controller = None
 		self.nviewer = None
@@ -45,6 +46,12 @@ class Calculator():
 
 	def set_scenario(self, scenario):
 		return self.scenario
+
+	def get_loop(self):
+		return self.loop
+
+	def set_loop(self, loop):
+		self.loop = loop
 
 	""" Returns the calculator's root.
 
@@ -191,6 +198,18 @@ class Calculator():
 		except Exception as ex:
 			self.throw_exec('custom')
 
+
+	async def pump(self):
+		while True:
+			try:
+				self.get_root().update_idletasks()
+				self.get_root().update()
+			except tk.TclError:
+				print(ex)
+				print('s')
+				return
+			await asyncio.sleep(0.001)
+
 	""" Starts the calculator application.
 
 	@return null
@@ -198,19 +217,18 @@ class Calculator():
 	async def run(self):
 
 		try:
-			print('[!] Running calculator.')
-			await self.get_scenario().diresolve()
+			print('[-->] Running calculator.')
 			await self.fill()
 			await self.customize()
 			self.get_root().title('Calculator')
 			self.get_root().config(bg='gray87')
-			self.set_open(True)
 
-			while True:
-				self.get_root().update()
-				await asyncio.sleep(.1)
+			self.set_open(True)	
+			asyncio.create_task(self.pump())
+
 		except asyncio.CancelledError:
 			print('[!] Tasks were cancelled.')
 		except Exception as ex:
+			print(ex)
 			self.throw_exec('run')
 
